@@ -5,12 +5,14 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { CompanySelector } from "@/components/CompanySelector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useBusinessData } from "@/hooks/useBusinessData";
 
 export default function BusinessPlatform() {
   const [currentView, setCurrentView] = useState<"dashboard" | "data-entry" | "analytics" | "export">("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { signOut } = useAuth();
   
   const {
     companies,
@@ -66,13 +68,24 @@ export default function BusinessPlatform() {
                 </p>
               </div>
             </div>
-            
-            <CompanySelector
-              companies={companies}
-              selectedCompany={selectedCompany}
-              onCompanyChange={setSelectedCompany}
-              onCreateCompany={createCompany}
-            />
+            <div className="flex items-center space-x-4">
+              <CompanySelector
+                companies={companies}
+                selectedCompany={selectedCompany}
+                onCompanyChange={setSelectedCompany}
+                onCreateCompany={createCompany}
+              />
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => signOut()}
+                className="flex items-center space-x-2"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Esci</span>
+              </Button>
+            </div>
           </div>
         </header>
 
