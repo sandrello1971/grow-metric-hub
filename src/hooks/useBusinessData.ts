@@ -6,6 +6,7 @@ export interface Company {
   id: string;
   name: string;
   description?: string;
+  capitale_sociale: number;
   user_id: string;
   created_at: string;
   updated_at: string;
@@ -115,12 +116,44 @@ export function useBusinessData() {
     }
   };
 
-  // Create company
-  const createCompany = async (name: string, description?: string) => {
+  // Update company
+  const updateCompany = async (id: string, name: string, description?: string, capitaleSociale: number = 0) => {
     try {
       const { data, error } = await supabase
         .from('companies')
-        .insert([{ name, description, user_id: (await supabase.auth.getUser()).data.user!.id }])
+        .update({ name, description, capitale_sociale: capitaleSociale })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      await loadCompanies();
+      setSelectedCompany(data);
+      
+      toast({
+        title: "Successo",
+        description: "Azienda aggiornata con successo",
+      });
+      
+      return data;
+    } catch (error) {
+      console.error('Error updating company:', error);
+      toast({
+        title: "Errore",
+        description: "Impossibile aggiornare l'azienda",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  // Create company
+  const createCompany = async (name: string, description?: string, capitaleSociale: number = 0) => {
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .insert([{ name, description, capitale_sociale: capitaleSociale, user_id: (await supabase.auth.getUser()).data.user!.id }])
         .select()
         .single();
 
@@ -259,6 +292,7 @@ export function useBusinessData() {
     targets,
     loading,
     createCompany,
+    updateCompany,
     saveMonthlyData: (data: any) => saveMonthlyData(data),
     saveTargets,
   };

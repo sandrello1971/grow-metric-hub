@@ -22,6 +22,7 @@ export default function BusinessPlatform() {
     targets,
     loading,
     createCompany,
+    updateCompany,
     saveMonthlyData,
   } = useBusinessData();
   if (loading) {
@@ -74,6 +75,7 @@ export default function BusinessPlatform() {
                 selectedCompany={selectedCompany}
                 onCompanyChange={setSelectedCompany}
                 onCreateCompany={createCompany}
+                onUpdateCompany={updateCompany}
               />
               
               <Button

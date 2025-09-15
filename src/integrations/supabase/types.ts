@@ -764,6 +764,7 @@ export type Database = {
       }
       companies: {
         Row: {
+          capitale_sociale: number | null
           created_at: string
           description: string | null
           id: string
@@ -772,6 +773,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          capitale_sociale?: number | null
           created_at?: string
           description?: string | null
           id?: string
@@ -780,6 +782,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          capitale_sociale?: number | null
           created_at?: string
           description?: string | null
           id?: string
