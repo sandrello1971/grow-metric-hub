@@ -667,6 +667,47 @@ export type Database = {
         }
         Relationships: []
       }
+      business_targets: {
+        Row: {
+          company_id: string
+          created_at: string
+          id: string
+          target_margine: number | null
+          target_ricavi: number | null
+          target_utile_netto: number | null
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          target_margine?: number | null
+          target_ricavi?: number | null
+          target_utile_netto?: number | null
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          target_margine?: number | null
+          target_ricavi?: number | null
+          target_utile_netto?: number | null
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_company_targets"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           color: string | null
@@ -718,6 +759,33 @@ export type Database = {
           session_id?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      companies: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1217,6 +1285,59 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      monthly_business_data: {
+        Row: {
+          company_id: string
+          compenso_imprenditore: number
+          costi_diretti: number
+          costi_totali: number
+          created_at: string
+          id: string
+          margine: number | null
+          month: number
+          ricavi: number
+          updated_at: string
+          utile_netto: number | null
+          year: number
+        }
+        Insert: {
+          company_id: string
+          compenso_imprenditore?: number
+          costi_diretti?: number
+          costi_totali?: number
+          created_at?: string
+          id?: string
+          margine?: number | null
+          month: number
+          ricavi?: number
+          updated_at?: string
+          utile_netto?: number | null
+          year: number
+        }
+        Update: {
+          company_id?: string
+          compenso_imprenditore?: number
+          costi_diretti?: number
+          costi_totali?: number
+          created_at?: string
+          id?: string
+          margine?: number | null
+          month?: number
+          ricavi?: number
+          updated_at?: string
+          utile_netto?: number | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_company"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       newsletter_rate_limit: {
         Row: {
