@@ -25,7 +25,7 @@ type MonthlyData = z.infer<typeof monthlyDataSchema>;
 
 interface DataEntryFormProps {
   companyId: string;
-  onSubmit: (data: MonthlyData & { margine: number; utileNetto: number }) => void;
+  onSubmit: (data: MonthlyData & { margine: number; utileNetto: number }) => Promise<void>;
 }
 
 export function DataEntryForm({ companyId, onSubmit }: DataEntryFormProps) {
@@ -67,7 +67,7 @@ export function DataEntryForm({ companyId, onSubmit }: DataEntryFormProps) {
     calculateMargins(watchedValues);
   }, [watchedValues.ricavi, watchedValues.costiDiretti, watchedValues.costiTotali]);
 
-  const handleSubmit = (data: MonthlyData) => {
+  const handleSubmit = async (data: MonthlyData) => {
     const { margine, utileNetto } = calculateMargins(data);
     
     // Validation warnings
@@ -87,15 +87,13 @@ export function DataEntryForm({ companyId, onSubmit }: DataEntryFormProps) {
       });
     }
 
-    onSubmit({ ...data, margine, utileNetto });
-    
-    toast({
-      title: "Dati salvati",
-      description: `Dati per ${data.month} ${data.year} salvati con successo.`,
-    });
-
-    form.reset();
-    setCalculatedValues(null);
+    try {
+      await onSubmit({ ...data, margine, utileNetto });
+      form.reset();
+      setCalculatedValues(null);
+    } catch (error) {
+      // Error is handled in the hook
+    }
   };
 
   const formatCurrency = (value: number) => {
