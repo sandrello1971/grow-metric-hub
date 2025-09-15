@@ -13,9 +13,9 @@ interface DashboardProps {
 
 const monthNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
 
-export function Dashboard({ companyName, monthlyData, targets }: DashboardProps) {
-  // Transform data for charts
-  const chartData = monthlyData.map(data => ({
+export function Dashboard({ companyName, monthlyData = [], targets = [] }: DashboardProps) {
+  // Transform data for charts - add safety check
+  const chartData = (monthlyData || []).map(data => ({
     month: monthNames[data.month - 1],
     ricavi: data.ricavi,
     margine: data.margine,
@@ -25,9 +25,9 @@ export function Dashboard({ companyName, monthlyData, targets }: DashboardProps)
   const currentMonth = chartData[chartData.length - 1];
   const previousMonth = chartData[chartData.length - 2];
   
-  // Get current year targets
+  // Get current year targets - add safety check
   const currentYear = new Date().getFullYear();
-  const currentTargets = targets.find(t => t.year === currentYear) || {
+  const currentTargets = (targets || []).find(t => t.year === currentYear) || {
     target_ricavi: 50000,
     target_margine: 30000,
     target_utile_netto: 18000,

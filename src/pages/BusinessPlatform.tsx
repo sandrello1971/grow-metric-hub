@@ -22,7 +22,6 @@ export default function BusinessPlatform() {
     createCompany,
     saveMonthlyData,
   } = useBusinessData();
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-background">

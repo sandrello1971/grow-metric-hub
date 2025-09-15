@@ -48,6 +48,7 @@ export function useBusinessData() {
   // Load companies
   const loadCompanies = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('companies')
         .select('*')
@@ -59,8 +60,10 @@ export function useBusinessData() {
       if (data && data.length > 0 && !selectedCompany) {
         setSelectedCompany(data[0]);
       }
+      setLoading(false);
     } catch (error) {
       console.error('Error loading companies:', error);
+      setLoading(false);
       toast({
         title: "Errore",
         description: "Impossibile caricare le aziende",
