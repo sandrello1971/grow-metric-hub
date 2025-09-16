@@ -67,12 +67,13 @@ export default function Auth() {
       });
 
       if (error) {
+        console.error('Login error:', error);
         if (error.message.includes('Invalid login credentials')) {
           setError('Email o password non corretti');
         } else if (error.message.includes('Email not confirmed')) {
           setError('Conferma la tua email prima di accedere');
         } else {
-          setError(error.message);
+          setError(`Errore di accesso: ${error.message}`);
         }
         return;
       }
@@ -95,7 +96,7 @@ export default function Auth() {
     setError(null);
 
     try {
-      const redirectUrl = `${window.location.origin}/business`;
+      const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
         email: data.email,
@@ -106,12 +107,13 @@ export default function Auth() {
       });
 
       if (error) {
+        console.error('Signup error:', error);
         if (error.message.includes('User already registered')) {
           setError('Utente già registrato. Prova ad accedere.');
         } else if (error.message.includes('Password should be')) {
           setError('La password deve essere più sicura');
         } else {
-          setError(error.message);
+          setError(`Errore di registrazione: ${error.message}`);
         }
         return;
       }
