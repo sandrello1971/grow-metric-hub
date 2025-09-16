@@ -149,9 +149,13 @@ export default function Auth() {
   };
 
   const onSubmit = (data: AuthForm) => {
+    console.log('Form submitted with data:', data);
+    console.log('Current mode:', mode);
     if (mode === 'login') {
+      console.log('Calling handleLogin');
       handleLogin(data);
     } else {
+      console.log('Calling handleSignup');
       handleSignup(data);
     }
   };
@@ -230,7 +234,12 @@ export default function Auth() {
                     </Alert>
                   )}
 
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading}
+                    onClick={() => console.log('Login button clicked')}
+                  >
                     {loading ? 'Accesso in corso...' : 'Accedi'}
                   </Button>
                 </form>
@@ -310,7 +319,12 @@ export default function Auth() {
                     </Alert>
                   )}
 
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading}
+                    onClick={() => console.log('Signup button clicked')}
+                  >
                     {loading ? 'Registrazione in corso...' : 'Registrati'}
                   </Button>
                 </form>
