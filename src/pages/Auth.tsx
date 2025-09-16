@@ -48,9 +48,16 @@ export default function Auth() {
   // Check if user is already logged in
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate('/business');
+      try {
+        console.log('Checking auth status...');
+        const { data: { session }, error } = await supabase.auth.getSession();
+        console.log('Session:', session, 'Error:', error);
+        if (session) {
+          console.log('User already logged in, redirecting...');
+          navigate('/business');
+        }
+      } catch (err) {
+        console.error('Error checking auth:', err);
       }
     };
     checkAuth();
@@ -61,10 +68,13 @@ export default function Auth() {
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Attempting login with:', data.email);
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
+
+      console.log('Login response:', { authData, error });
 
       if (error) {
         console.error('Login error:', error);
@@ -78,6 +88,7 @@ export default function Auth() {
         return;
       }
 
+      console.log('Login successful, user:', authData.user);
       toast({
         title: "Accesso effettuato",
         description: "Benvenuto nella piattaforma business!",
@@ -85,6 +96,7 @@ export default function Auth() {
 
       navigate('/business');
     } catch (err) {
+      console.error('Login exception:', err);
       setError('Errore durante l\'accesso');
     } finally {
       setLoading(false);
@@ -96,15 +108,18 @@ export default function Auth() {
     setError(null);
 
     try {
+      console.log('Attempting signup with:', data.email);
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           emailRedirectTo: redirectUrl
         }
       });
+
+      console.log('Signup response:', { authData, error });
 
       if (error) {
         console.error('Signup error:', error);
@@ -118,6 +133,7 @@ export default function Auth() {
         return;
       }
 
+      console.log('Signup successful, user:', authData.user);
       toast({
         title: "Registrazione completata",
         description: "Controlla la tua email per confermare l'account",
@@ -125,6 +141,7 @@ export default function Auth() {
 
       setMode('login');
     } catch (err) {
+      console.error('Signup exception:', err);
       setError('Errore durante la registrazione');
     } finally {
       setLoading(false);
