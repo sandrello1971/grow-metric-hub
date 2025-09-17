@@ -149,15 +149,22 @@ export default function Auth() {
   };
 
   const onSubmit = (data: AuthForm) => {
-    console.log('Form submitted with data:', data);
-    console.log('Current mode:', mode);
+    console.log('🚀 Form submitted with data:', data);
+    console.log('🚀 Current mode:', mode);
+    console.log('🚀 Form errors:', form.formState.errors);
+    console.log('🚀 Form isValid:', form.formState.isValid);
+    
     if (mode === 'login') {
-      console.log('Calling handleLogin');
+      console.log('🚀 Calling handleLogin');
       handleLogin(data);
     } else {
-      console.log('Calling handleSignup');
+      console.log('🚀 Calling handleSignup');
       handleSignup(data);
     }
+  };
+
+  const onError = (errors: any) => {
+    console.log('🚨 Form validation errors:', errors);
   };
 
   return (
@@ -184,7 +191,7 @@ export default function Auth() {
 
             <TabsContent value="login" className="space-y-4">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
                   <FormField
                     control={form.control}
                     name="email"
@@ -248,7 +255,7 @@ export default function Auth() {
 
             <TabsContent value="signup" className="space-y-4">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-4">
                   <FormField
                     control={form.control}
                     name="email"
