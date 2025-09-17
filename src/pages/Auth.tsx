@@ -13,21 +13,21 @@ import * as z from 'zod';
 import { Building2, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const authSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email('Inserisci un email valida'),
   password: z.string().min(6, 'La password deve avere almeno 6 caratteri'),
-  confirmPassword: z.string().optional(),
-}).refine((data) => {
-  if (data.confirmPassword !== undefined) {
-    return data.password === data.confirmPassword;
-  }
-  return true;
-}, {
+});
+
+const signupSchema = z.object({
+  email: z.string().email('Inserisci un email valida'),
+  password: z.string().min(6, 'La password deve avere almeno 6 caratteri'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
   message: "Le password non coincidono",
   path: ["confirmPassword"],
 });
 
-type AuthForm = z.infer<typeof authSchema>;
+type AuthForm = z.infer<typeof loginSchema> & { confirmPassword?: string };
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
@@ -37,13 +37,18 @@ export default function Auth() {
   const { toast } = useToast();
 
   const form = useForm<AuthForm>({
-    resolver: zodResolver(authSchema),
+    resolver: zodResolver(mode === 'login' ? loginSchema : signupSchema),
     defaultValues: {
       email: '',
       password: '',
       confirmPassword: '',
     },
   });
+
+  // Reset form when mode changes
+  useEffect(() => {
+    form.reset();
+  }, [mode, form]);
 
   // Check if user is already logged in
   useEffect(() => {
