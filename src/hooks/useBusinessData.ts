@@ -265,6 +265,46 @@ export function useBusinessData() {
     }
   };
 
+  // Update monthly data
+  const updateMonthlyData = async (id: string, updatedData: Partial<MonthlyBusinessData>) => {
+    try {
+      const { error } = await supabase
+        .from('monthly_business_data')
+        .update(updatedData)
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      // Ricarica i dati dopo l'aggiornamento
+      if (selectedCompany) {
+        await loadMonthlyData(selectedCompany.id);
+      }
+    } catch (error) {
+      console.error('Error updating monthly data:', error);
+      throw error;
+    }
+  };
+
+  // Delete monthly data
+  const deleteMonthlyData = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('monthly_business_data')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      // Ricarica i dati dopo l'eliminazione
+      if (selectedCompany) {
+        await loadMonthlyData(selectedCompany.id);
+      }
+    } catch (error) {
+      console.error('Error deleting monthly data:', error);
+      throw error;
+    }
+  };
+
   // Initial load
   useEffect(() => {
     const initializeData = async () => {
@@ -294,6 +334,8 @@ export function useBusinessData() {
     createCompany,
     updateCompany,
     saveMonthlyData: (data: any) => saveMonthlyData(data),
+    updateMonthlyData,
+    deleteMonthlyData,
     saveTargets,
   };
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dashboard } from "@/components/dashboard/Dashboard";
 import { DataEntryForm } from "@/components/forms/DataEntryForm";
+import { MonthlyDataTable } from "@/components/forms/MonthlyDataTable";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { CompanySelector } from "@/components/CompanySelector";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,8 @@ export default function BusinessPlatform() {
     createCompany,
     updateCompany,
     saveMonthlyData,
+    updateMonthlyData,
+    deleteMonthlyData,
   } = useBusinessData();
   if (loading) {
     return (
@@ -111,10 +114,17 @@ export default function BusinessPlatform() {
               )}
               
               {currentView === "data-entry" && (
-                <DataEntryForm 
-                  companyId={selectedCompany.id}
-                  onSubmit={saveMonthlyData}
-                />
+                <div className="space-y-6">
+                  <DataEntryForm 
+                    companyId={selectedCompany.id}
+                    onSubmit={saveMonthlyData}
+                  />
+                  <MonthlyDataTable
+                    data={monthlyData}
+                    onUpdate={updateMonthlyData}
+                    onDelete={deleteMonthlyData}
+                  />
+                </div>
               )}
               
               {currentView === "analytics" && (
